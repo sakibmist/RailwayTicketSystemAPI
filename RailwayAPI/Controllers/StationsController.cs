@@ -1,0 +1,202 @@
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using RailwayAPI.Dto;
+using RailwayAPI.Models;
+
+namespace RailwayAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class StationsController : ControllerBase
+    {
+        private readonly Context _context;
+        public StationsController(Context context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public IActionResult GetAllStations()
+        {
+            try
+            {
+                var stations = _context.Stations.ToList();
+                return Ok(stations);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("{id}", Name = "GetById")]
+        public IActionResult GetStaionById(int id)
+        {
+            try
+            {
+                var station = _context.Stations.FirstOrDefault(x => x.Id == id);
+                return Ok(station);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("destinations/{fromId}")]
+        public IActionResult GetDestinationStationsById(int fromId)
+        {
+            try
+            {
+                var destinationStations = _context.Routes
+                    .Where(x => x.StationFormId == fromId)
+                    .Select(x => new DropdownDto
+                    {
+                        Text = x.StationTo.Name,
+                        Value = x.Id
+                    }).ToList();
+                return Ok(destinationStations);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+        //Get all TrainName against the Train route and select date
+
+        [HttpGet("trains/{routeId}/{date}")]
+        public IActionResult GetAllTrainByRouteId(int? routeId, DateTime? date) // from RouteTrain
+        {
+            try
+            {
+                if (routeId == null || date == null) return BadRequest();
+                var weekDayName = $"{date:dddd}";
+
+                var query = _context.RouteTrains.Where(x => x.RouteId == routeId);
+
+                query = query.Where(x => !_context.TrainWeekends.Any(y => y.TrainId == x.TrainId && y.WeekDayName == weekDayName));
+
+                query = query.Where(x => !_context.TrainHolidays.Any(z => z.TrainId == x.TrainId && z.Hodliday.Date == date.Value.Date));
+
+                var trains = query.Select(x => new DropdownDto
+                {
+                    Text = x.Train.Name,
+                    Value = x.Train.Id
+                }).ToList();
+
+                return Ok(trains);
+
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+        }
+
+
+        //Get all TrainClass and price against the TrainId
+
+        [HttpGet("train-classes/{trainId}")]
+        public IActionResult GetAllTrainClassAndPrice(int trainId)
+        {
+            try
+            {
+                var Classes = _context.TrainClasses
+                    .Where(x => x.TrainId == trainId)
+                    .Select(x => new DropdownDto
+                    {
+                        Text = x.Class.Name,
+                        Value = x.Price
+                    }).ToList();
+                return Ok(Classes);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+
+        }
+
+
+        //Get all TrainName
+
+        [HttpGet("Train")]
+        public IActionResult GetAllTrain()
+        {
+            try
+            {
+                var trains = _context.Trains.ToList();
+                return Ok(trains);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+        }
+
+
+        [HttpPost]
+        public IActionResult AddStation(StationDto dto)
+        {
+            try
+            {
+                if (!ModelState.IsValid) return BadRequest();
+                var station = new Station
+                {
+                    Name = dto.Name
+                };
+                _context.Stations.Add(station);
+                _context.SaveChanges();
+                return CreatedAtRoute("GetById", new { id = station.Id }, station);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateStation(int? id, StationDto dto)
+        {
+            try
+            {
+                if (id == null || id != dto.Id) return BadRequest();
+                if (!ModelState.IsValid) return BadRequest();
+                var station = new Station
+                {
+                    Id = dto.Id,
+                    Name = dto.Name
+                };
+                _context.Stations.Update(station);
+                _context.SaveChanges();
+                return CreatedAtRoute("GetById", new { id = station.Id }, station);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult UpdateStation(int? id)
+        {
+            try
+            {
+                if (id == null) return BadRequest();
+                var station = _context.Stations.FirstOrDefault(x => x.Id == id);
+                _context.Stations.Remove(station);
+                _context.SaveChanges();
+                return CreatedAtRoute("GetById", new { id = station.Id }, station);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+@import '../bootstrap.min.css';
+.req{
+    color:red;
+}
+.navSpace{
+    margin-left: 30px;
+}
+.topheight{
+    margin-top:5px;
+}
+.footerText{
+    text-align: center;
+}
