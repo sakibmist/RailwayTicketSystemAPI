@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route } from "react-router-dom";
+import { Route, NavLink } from "react-router-dom";
 //import logo from './logo.svg';
 import "./App.css";
 import LoginPage from "./auth/LoginPage";
@@ -31,14 +31,11 @@ class App extends Component {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav mr-auto">
               <li className="nav-item active navSpace">
-                <a className="nav-link" href="s">
-                  Home <span className="sr-only">(current)</span>
-                </a>
+              <NavLink className="nav-link" to="/LoginPage">Home</NavLink>
+               
               </li>
               <li className="nav-item navSpace">
-                <a className="nav-link" href="s">
-                  Link
-                </a>
+                <NavLink className="nav-link" to="/fare-query">Fare Query</NavLink>
               </li>
               <li className="nav-item dropdown navSpace">
                 <a
@@ -74,10 +71,14 @@ class App extends Component {
           </div>
         </nav>
       </header>
-        <Route path="/login" component={LoginPage} />
+      <div>
+      <Route path="/login" component={LoginPage} />
         <Route path="/sign-up" component={SignUpPage} />
         <Route path="/home" component={DashboardPage} />
         <Route path="/fare-query" component={FareQueryPage}/>
+      </div>
+        
+
         <footer className="footer footerText">
           <div className="container">
             <span className="text-muted">
