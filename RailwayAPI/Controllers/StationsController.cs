@@ -25,8 +25,24 @@ namespace RailwayAPI.Controllers
                 var stations = _context.Stations.ToList();
                 return Ok(stations);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("classes")]
+        public IActionResult GetAllClass()
+        {
+            try
+            {
+                var listofClass = _context.Classes.ToList();
+                return Ok(listofClass);
+            }
+            catch (Exception ex)
+            {
+
                 return BadRequest();
             }
         }
@@ -55,7 +71,27 @@ namespace RailwayAPI.Controllers
                     .Select(x => new DropdownDto
                     {
                         Text = x.StationTo.Name,
-                        Value = x.Id
+                            Value = x.Id
+                    }).ToList();
+                return Ok(destinationStations);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet("stations/{stationFromId}")]
+        public IActionResult GetStationToById(int stationFromId)
+        {
+            try
+            {
+                var destinationStations = _context.Routes
+                    .Where(x => x.StationFormId == stationFromId)
+                    .Select(x => new DropdownDto
+                    {
+                        Text = x.StationTo.Name,
+                            Value = x.StationToId
                     }).ToList();
                 return Ok(destinationStations);
             }
@@ -83,7 +119,7 @@ namespace RailwayAPI.Controllers
                 var trains = query.Select(x => new DropdownDto
                 {
                     Text = x.Train.Name,
-                    Value = x.Train.Id
+                        Value = x.Train.Id
                 }).ToList();
 
                 return Ok(trains);
@@ -95,7 +131,6 @@ namespace RailwayAPI.Controllers
                 return BadRequest();
             }
         }
-
 
         //Get all TrainClass and price against the TrainId
 
@@ -109,7 +144,7 @@ namespace RailwayAPI.Controllers
                     .Select(x => new DropdownDto
                     {
                         Text = x.Class.Name,
-                        Value = x.Price
+                            Value = x.Price
                     }).ToList();
                 return Ok(Classes);
             }
@@ -120,7 +155,6 @@ namespace RailwayAPI.Controllers
             }
 
         }
-
 
         //Get all TrainName
 
@@ -139,7 +173,6 @@ namespace RailwayAPI.Controllers
             }
         }
 
-
         [HttpPost]
         public IActionResult AddStation(StationDto dto)
         {
@@ -157,6 +190,38 @@ namespace RailwayAPI.Controllers
             catch (Exception)
             {
                 return BadRequest();
+            }
+        }
+
+        [HttpPost("search/trains")]
+        public IActionResult SearchTrains(TrainRouteSearchDto dto)
+        {
+            try
+            {
+                var weekDayName = $"{dto.JourneyDate:dddd}";
+
+                var query = _context.RouteTrains.Where(x =>
+                    x.Route.StationFormId == dto.StationFormId &&
+                    x.Route.StationToId == dto.StationToId
+                );
+                query = query.Where(x => _context.TrainClasses.Any(y => y.ClassId == dto.ClassId && y.TrainId == x.TrainId));
+                query = query.Where(x => !_context.TrainWeekends.Any(y => y.TrainId == x.TrainId && y.WeekDayName == weekDayName));
+                query = query.Where(x => !_context.TrainHolidays.Any(z => z.TrainId == x.TrainId && z.Hodliday.Date == dto.JourneyDate.Date));
+
+                var trains = query.Select(s => new TrainRouteInfoDto
+                {
+                    Id = s.Id,
+                        TrainNo = s.Train.Code,
+                        TrainName = s.Train.Name,
+                        DepartureTime = s.DepartureTime,
+                }).ToList();
+
+                return Ok(trains);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

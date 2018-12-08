@@ -16,7 +16,8 @@ namespace RailwayAPI.Models
         public int RouteId  { get; set; }
 
         [Required]
-        public int TrainId { get; set; }
+        public int TrainId { get; set; }  
+        public string  DepartureTime { get; set; }
 
         [ForeignKey("TrainId")]
         public virtual Train Train { get; set; }
