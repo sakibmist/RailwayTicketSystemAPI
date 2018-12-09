@@ -1,3 +1,5 @@
+using System;
+
 namespace RailwayAPI.Dto
 {
     public class TrainRouteInfoDto

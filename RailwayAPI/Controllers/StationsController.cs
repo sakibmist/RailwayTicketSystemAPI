@@ -211,9 +211,9 @@ namespace RailwayAPI.Controllers
                 var trains = query.Select(s => new TrainRouteInfoDto
                 {
                     Id = s.Id,
-                        TrainNo = s.Train.Code,
-                        TrainName = s.Train.Name,
-                        DepartureTime = s.DepartureTime,
+                    TrainNo = s.Train.Code,
+                    TrainName = s.Train.Name,
+                    DepartureTime =  $"{s.DepartureTime: HH:mm}",
                 }).ToList();
 
                 return Ok(trains);

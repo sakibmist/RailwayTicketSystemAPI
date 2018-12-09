@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, NavLink } from "react-router-dom";
+import { Route, NavLink, Switch } from "react-router-dom";
 //import logo from './logo.svg';
 import "./App.css";
 import LoginPage from "./auth/LoginPage";
@@ -7,6 +7,7 @@ import SignUpPage from "./auth/SignUpPage";
 import DashboardPage from "./DashboardPage";
 import FareQueryPage from "./FareQueryPage";
 import TrainRoutePage from "./TrainRoutePage";
+import AddRouteTrainPage from './auth/AddRouteTrainPage';
 
 class App extends Component {
   render() {
@@ -17,7 +18,6 @@ class App extends Component {
             <div className="card-header border">
               <h2 style={{ textAlign: "center" }}>Header</h2>
             </div>
-
             <nav className="navbar navbar-expand-lg navbar-dark bg-info border-circle">
               <a className="navbar-brand" href="@">
                 Navbar
@@ -40,7 +40,7 @@ class App extends Component {
               >
                 <ul className="navbar-nav mr-auto">
                   <li className="nav-item active navSpace">
-                    <NavLink className="nav-link" to="/LoginPage">
+                    <NavLink className="nav-link" to="/app">
                       Home
                     </NavLink>
                   </li>
@@ -82,15 +82,28 @@ class App extends Component {
                       Train Route
                     </NavLink>
                   </li>
+                  <li className="nav-item navSpace">
+                    <NavLink className="nav-link" to="/add-route">
+                      Add Train Route
+                    </NavLink>
+                  </li>
+                  <li className="nav-item navSpace">
+                    <NavLink className="nav-link" to="/login">
+                      Login
+                    </NavLink>
+                  </li>
                 </ul>
               </div>
             </nav>
             <div className="minHeight">
-              <Route path="/login" component={LoginPage} />
-              <Route path="/sign-up" component={SignUpPage} />
-              <Route path="/home" component={DashboardPage} />
-              <Route path="/fare-query" component={FareQueryPage} />
-              <Route path="/TrainRoutePage" component={TrainRoutePage} />
+              <Switch>
+                <Route path="/login" component={LoginPage} exact />
+                <Route path="/sign-up" component={SignUpPage} exact />
+                <Route path="/home" component={DashboardPage} exact />
+                <Route path="/fare-query" component={FareQueryPage} exact />
+                <Route path="/TrainRoutePage" component={TrainRoutePage} exact />
+                <Route path="/add-route" component={AddRouteTrainPage} exact />
+              </Switch>
             </div>
             <div className="card-footer border">
               <h6 className="text-center">
