@@ -40,7 +40,7 @@ class TrainRoutePage extends React.Component {
     const response = await http.get(
       `${this.baseUrl}/stations/stations/${value}`
     );
-    console.log(response.data);
+    
 
     const stationsToList = response.data || [];
 
