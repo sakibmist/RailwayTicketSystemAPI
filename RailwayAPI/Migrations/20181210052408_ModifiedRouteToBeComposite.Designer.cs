@@ -10,8 +10,8 @@ using RailwayAPI.Models;
 namespace RailwayAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20181208063556_modifyAtRouteTrainTbl")]
-    partial class modifyAtRouteTrainTbl
+    [Migration("20181210052408_ModifiedRouteToBeComposite")]
+    partial class ModifiedRouteToBeComposite
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,9 +48,10 @@ namespace RailwayAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StationFormId");
-
                     b.HasIndex("StationToId");
+
+                    b.HasIndex("StationFormId", "StationToId")
+                        .IsUnique();
 
                     b.ToTable("Routes");
                 });
@@ -61,7 +62,7 @@ namespace RailwayAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DepartureTime");
+                    b.Property<TimeSpan>("DepartureTime");
 
                     b.Property<int>("RouteId");
 
@@ -183,7 +184,7 @@ namespace RailwayAPI.Migrations
             modelBuilder.Entity("RailwayAPI.Models.RouteTrain", b =>
                 {
                     b.HasOne("RailwayAPI.Models.Route", "Route")
-                        .WithMany()
+                        .WithMany("RouteTrains")
                         .HasForeignKey("RouteId")
                         .OnDelete(DeleteBehavior.Cascade);
 

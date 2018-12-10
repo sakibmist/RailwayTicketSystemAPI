@@ -46,9 +46,10 @@ namespace RailwayAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("StationFormId");
-
                     b.HasIndex("StationToId");
+
+                    b.HasIndex("StationFormId", "StationToId")
+                        .IsUnique();
 
                     b.ToTable("Routes");
                 });
@@ -101,7 +102,7 @@ namespace RailwayAPI.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(15);
+                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 
@@ -181,7 +182,7 @@ namespace RailwayAPI.Migrations
             modelBuilder.Entity("RailwayAPI.Models.RouteTrain", b =>
                 {
                     b.HasOne("RailwayAPI.Models.Route", "Route")
-                        .WithMany()
+                        .WithMany("RouteTrains")
                         .HasForeignKey("RouteId")
                         .OnDelete(DeleteBehavior.Cascade);
 

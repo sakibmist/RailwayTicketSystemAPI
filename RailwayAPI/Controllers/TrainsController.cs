@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using RailwayAPI.Dto;
@@ -60,6 +62,50 @@ namespace RailwayAPI.Controllers
             }
         }
 
+        // add route train and departure time
+
+        [HttpPost("add")]
+        public IActionResult AddRouteDataInfo(IEnumerable<AddRouteInfoDto> routeInfoDto)
+        {
+            using(var sakib = _dataContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var item in routeInfoDto)
+                    {
+                        Route route = null;
+                        var routeFromDb = _dataContext.Routes.FirstOrDefault(x => x.StationToId == item.StationToId && x.StationFormId == item.StationFormId);
+                        if (routeFromDb == null)
+                        {
+                            route = new Route
+                            {
+                                StationFormId = item.StationFormId,
+                                StationToId = item.StationToId,
+                            };
+                            _dataContext.Routes.Add(route);
+                            _dataContext.SaveChanges();
+                        }
+
+                        var routeTrain = new RouteTrain
+                        {
+                            RouteId = routeFromDb?.Id ?? route.Id,
+                            DepartureTime = item.DepartureTime,
+                            TrainId = item.TrainId
+                        };
+                        _dataContext.RouteTrains.Add(routeTrain);
+                        _dataContext.SaveChanges();
+                    }
+                    sakib.Commit();
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    sakib.Rollback();
+                    return BadRequest(ex.Message);
+                }
+            }
+        }
+
         [HttpDelete("{id}")]
         public IActionResult DeleteById(int id)
         {
@@ -93,7 +139,7 @@ namespace RailwayAPI.Controllers
                     }).ToList();
                 return Ok(destinationStations);
             }
-            catch (System.Exception )
+            catch (System.Exception)
             {
                 return BadRequest();
             }

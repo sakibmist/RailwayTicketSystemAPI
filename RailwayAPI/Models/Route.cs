@@ -16,12 +16,12 @@ namespace RailwayAPI.Models
         public int StationFormId { get; set; }
 
         [Required]
-        public int StationToId { get; set; } 
+        public int StationToId { get; set; }
 
-        [ForeignKey("StationFormId")]
         public virtual Station StationFrom { get; set; }
 
-        [ForeignKey("StationToId")]
         public virtual Station StationTo { get; set; }
+
+        public virtual List<RouteTrain> RouteTrains { get; set; }
     }
 }

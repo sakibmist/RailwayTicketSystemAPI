@@ -16,7 +16,7 @@ namespace RailwayAPI.Models
         public string Code { get; set; }
 
         [Required]
-        [StringLength(15)]
+        [StringLength(255)]
         public string Name { get; set; }
     }
 }
