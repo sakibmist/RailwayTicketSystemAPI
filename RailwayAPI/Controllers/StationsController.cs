@@ -156,6 +156,32 @@ namespace RailwayAPI.Controllers
 
         }
 
+        //get all train station against the train Id for show in Modal
+
+        [HttpGet("train-route/{trainId}")]
+        public IActionResult GetAllTrainRoutes(int trainId)
+        {
+            try
+            {
+                var routeStations = _context.RouteTrains
+                    .Where(x => x.TrainId == trainId)
+                    .OrderBy(x=>x.DepartureTime)
+                    .Select(s => new TrainRouteModalDto
+                    {
+                        Id = s.TrainId,
+                        DepartureTime = s.DepartureTime,
+                        StationName = s.Route.StationFrom.Name,                        
+                    }).ToList();
+                return Ok(routeStations);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+
+        }
+
         //Get all TrainName
 
         [HttpGet("Train")]
@@ -211,9 +237,9 @@ namespace RailwayAPI.Controllers
                 var trains = query.Select(s => new TrainRouteInfoDto
                 {
                     Id = s.Id,
-                    TrainNo = s.Train.Code,
-                    TrainName = s.Train.Name,
-                    DepartureTime =  $"{s.DepartureTime: HH:mm}",
+                        TrainNo = s.Train.Code,
+                        TrainName = s.Train.Name,
+                        DepartureTime = $"{s.DepartureTime: HH:mm}"
                 }).ToList();
 
                 return Ok(trains);

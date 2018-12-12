@@ -17,6 +17,7 @@ namespace RailwayAPI.Models
 
         [Required]
         public int TrainId { get; set; }  
+        
         public TimeSpan  DepartureTime { get; set; }
 
         [ForeignKey("TrainId")]

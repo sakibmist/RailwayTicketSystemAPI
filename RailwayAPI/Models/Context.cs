@@ -19,6 +19,8 @@ namespace RailwayAPI.Models
         public virtual DbSet<TrainWeekend> TrainWeekends { get; set; }
         public virtual DbSet<TrainHoliday> TrainHolidays { get; set; }
 
+
+// fluent api for composite key
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Route>().HasKey(k => k.Id);

@@ -1,6 +1,7 @@
 import React from "react";
 import momemt from "moment";
 import http from "axios";
+import RouteListModal from "./Modal/RouteListModal";
 
 class TrainRoutePage extends React.Component {
   state = {
@@ -11,7 +12,9 @@ class TrainRoutePage extends React.Component {
     stationsFromList: [],
     stationsToList: [],
     classList: [],
-    listofTrainsInfo: []
+    listofTrainsInfo: [],
+    showRouteModal: false,
+    routes: []
   };
 
   baseUrl = "http://localhost:5000/api";
@@ -39,11 +42,8 @@ class TrainRoutePage extends React.Component {
     if (!value) return;
     const response = await http.get(
       `${this.baseUrl}/stations/stations/${value}`
-    );
-    
-
+    );  
     const stationsToList = response.data || [];
-
     this.setState({ stationsToList });
   };
 
@@ -68,6 +68,19 @@ class TrainRoutePage extends React.Component {
     }
   };
 
+  handleShowHideModal = async (trainId = null) => {
+    this.setState((prevState) => ({ 
+      showRouteModal: !prevState.showRouteModal
+    }));
+
+    // todo api fetch
+    if (trainId) {
+
+      const response = await http.get(`${this.baseUrl}/`)
+    }
+
+  };
+
   render() {
     const {
       journeyDate,
@@ -77,8 +90,11 @@ class TrainRoutePage extends React.Component {
       stationsFromList,
       stationsToList,
       classList,
-      listofTrainsInfo
+      listofTrainsInfo,
+      routes,
+      showRouteModal
     } = this.state;
+
     return (
       <div className="card-body border minHeight">
         <div className="offset-2 col-sm-8">
@@ -207,13 +223,18 @@ class TrainRoutePage extends React.Component {
                     <td>{train.trainNo}</td>
                     <td>{train.trainName}</td>
                     <td>{train.departureTime}</td>
-                    <td>View</td>
+                    <td onClick={() => this.handleShowHideModal(train.id)}>View</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
         </div>
+        <RouteListModal 
+          routes={routes} 
+          isOpen={showRouteModal} 
+          handleModal={this.handleShowHideModal}
+        />
       </div>
     );
   }
