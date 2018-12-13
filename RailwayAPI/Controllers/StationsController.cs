@@ -237,7 +237,7 @@ namespace RailwayAPI.Controllers
                 // var results = query.ToList();
                 var trains = query.Select(s => new TrainRouteInfoDto // IQueryable aro query possible.
                 {
-                    Id = s.Id,
+                    Id = s.TrainId,
                     TrainNo = s.Train.Code,
                     TrainName = s.Train.Name,
                     DepartureTime =  $"{new DateTime(s.DepartureTime.Ticks):HH:mm}" //s.DepartureTime.ToString("HH:mm") timespan is object type, so, use string in dto 

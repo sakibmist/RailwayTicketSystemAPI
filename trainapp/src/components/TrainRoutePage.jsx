@@ -27,7 +27,6 @@ class TrainRoutePage extends React.Component {
     this.setState({ stationsFromList });
 
     response = await http.get(`${this.baseUrl}/stations/classes`);
-    console.log(response.data);
     const classList = response.data || [];
     this.setState({ classList });
   }
@@ -78,10 +77,12 @@ class TrainRoutePage extends React.Component {
       showRouteModal: !prevState.showRouteModal
     }));
     if (train) {
+      console.log(train);
       const {id, trainName, trainNo} = train;
       const response = await http.get(`${this.baseUrl}/stations/train-route/${id}`);
       if (response.status === 200) {
         const routes = response.data;
+        console.log(routes);
         this.setState({ routes, trainName, trainCode: trainNo });
       }
     }

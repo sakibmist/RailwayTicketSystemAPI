@@ -40,3 +40,17 @@ G:\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.Assembly
 G:\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.RazorTargetAssemblyInfo.cache
 G:\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.dll
 G:\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.pdb
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\bin\Debug\netcoreapp2.1\RailwayAPI.deps.json
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\bin\Debug\netcoreapp2.1\RailwayAPI.runtimeconfig.json
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\bin\Debug\netcoreapp2.1\RailwayAPI.runtimeconfig.dev.json
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\bin\Debug\netcoreapp2.1\RailwayAPI.dll
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\bin\Debug\netcoreapp2.1\RailwayAPI.pdb
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.csprojAssemblyReference.cache
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.csproj.CoreCompileInputs.cache
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.RazorAssemblyInfo.cache
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.RazorAssemblyInfo.cs
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.AssemblyInfoInputs.cache
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.AssemblyInfo.cs
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.RazorTargetAssemblyInfo.cache
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.dll
+F:\ReactStart\ABaai\CoreApi\RailwayTicketSystemAPI\RailwayAPI\obj\Debug\netcoreapp2.1\RailwayAPI.pdb
