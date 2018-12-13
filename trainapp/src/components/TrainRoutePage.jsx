@@ -14,7 +14,9 @@ class TrainRoutePage extends React.Component {
     classList: [],
     listofTrainsInfo: [],
     showRouteModal: false,
-    routes: []
+    routes: [],
+    trainName: "",
+    trainCode: ""
   };
 
   baseUrl = "http://localhost:5000/api";
@@ -25,6 +27,7 @@ class TrainRoutePage extends React.Component {
     this.setState({ stationsFromList });
 
     response = await http.get(`${this.baseUrl}/stations/classes`);
+    console.log(response.data);
     const classList = response.data || [];
     this.setState({ classList });
   }
@@ -42,7 +45,7 @@ class TrainRoutePage extends React.Component {
     if (!value) return;
     const response = await http.get(
       `${this.baseUrl}/stations/stations/${value}`
-    );  
+    );
     const stationsToList = response.data || [];
     this.setState({ stationsToList });
   };
@@ -64,21 +67,24 @@ class TrainRoutePage extends React.Component {
     if (response.status === 200) {
       const listofTrainsInfo = response.data;
       console.log(listofTrainsInfo);
-      this.setState({ listofTrainsInfo });
+      this.setState({
+        listofTrainsInfo
+      });
     }
   };
 
-  handleShowHideModal = async (trainId = null) => {
-    this.setState((prevState) => ({ 
+  handleShowHideModal = async (train = null) => {
+    this.setState((prevState) => ({
       showRouteModal: !prevState.showRouteModal
     }));
-
-    // todo api fetch
-    if (trainId) {
-
-      const response = await http.get(`${this.baseUrl}/`)
+    if (train) {
+      const {id, trainName, trainNo} = train;
+      const response = await http.get(`${this.baseUrl}/stations/train-route/${id}`);
+      if (response.status === 200) {
+        const routes = response.data;
+        this.setState({ routes, trainName, trainCode: trainNo });
+      }
     }
-
   };
 
   render() {
@@ -92,6 +98,8 @@ class TrainRoutePage extends React.Component {
       classList,
       listofTrainsInfo,
       routes,
+      trainCode,
+      trainName,
       showRouteModal
     } = this.state;
 
@@ -223,18 +231,27 @@ class TrainRoutePage extends React.Component {
                     <td>{train.trainNo}</td>
                     <td>{train.trainName}</td>
                     <td>{train.departureTime}</td>
-                    <td onClick={() => this.handleShowHideModal(train.id)}>View</td>
+                    <td>
+                      <button 
+                        className="btn btn-sm" 
+                        onClick={() => this.handleShowHideModal(train)}
+                      >
+                          View
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
         </div>
-        <RouteListModal 
-          routes={routes} 
-          isOpen={showRouteModal} 
+        {showRouteModal && <RouteListModal
+          trainCode={trainCode}
+          trainName={trainName}
+          routes={routes}
+          isOpen={showRouteModal}
           handleModal={this.handleShowHideModal}
-        />
+        />}
       </div>
     );
   }

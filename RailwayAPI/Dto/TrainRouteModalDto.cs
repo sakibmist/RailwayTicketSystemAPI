@@ -4,8 +4,9 @@ namespace RailwayAPI.Dto
 {
     public class TrainRouteModalDto
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
         public string StationName { get; set; }
-        public TimeSpan DepartureTime { get; set; }
+        public string DepartureTime { get; set; } 
+       
     }
 }

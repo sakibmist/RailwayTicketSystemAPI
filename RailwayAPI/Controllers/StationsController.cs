@@ -169,8 +169,8 @@ namespace RailwayAPI.Controllers
                     .Select(s => new TrainRouteModalDto
                     {
                         Id = s.TrainId,
-                        DepartureTime = s.DepartureTime,
-                        StationName = s.Route.StationFrom.Name,                        
+                        DepartureTime = $"{new DateTime(s.DepartureTime.Ticks):HH:mm}",
+                        StationName = s.Route.StationTo.Name  
                     }).ToList();
                 return Ok(routeStations);
             }
@@ -234,12 +234,13 @@ namespace RailwayAPI.Controllers
                 query = query.Where(x => !_context.TrainWeekends.Any(y => y.TrainId == x.TrainId && y.WeekDayName == weekDayName));
                 query = query.Where(x => !_context.TrainHolidays.Any(z => z.TrainId == x.TrainId && z.Hodliday.Date == dto.JourneyDate.Date));
 
-                var trains = query.Select(s => new TrainRouteInfoDto
+                // var results = query.ToList();
+                var trains = query.Select(s => new TrainRouteInfoDto // IQueryable aro query possible.
                 {
                     Id = s.Id,
-                        TrainNo = s.Train.Code,
-                        TrainName = s.Train.Name,
-                        DepartureTime = $"{s.DepartureTime: HH:mm}"
+                    TrainNo = s.Train.Code,
+                    TrainName = s.Train.Name,
+                    DepartureTime =  $"{new DateTime(s.DepartureTime.Ticks):HH:mm}" //s.DepartureTime.ToString("HH:mm") timespan is object type, so, use string in dto 
                 }).ToList();
 
                 return Ok(trains);
@@ -274,7 +275,7 @@ namespace RailwayAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult UpdateStation(int? id)
+        public IActionResult DeleteStation(int? id) // nullable operator.
         {
             try
             {

@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Modal from './Modal';
 import PropTypes from 'prop-types';
 
@@ -18,16 +17,16 @@ class RouteListModal extends React.Component {
     };
 
     render() {
-        const { routes = [] } = this.props;
+        const { routes = [], trainName, trainCode } = this.props;
         return (
             <div className="card-body border minHeight">
                 <div>
-                    <h1>React Modal</h1>
-                    <Modal show={this.state.show} handleClose={this.hideModal}>
+
+                    <Modal show={this.state.show} handleClose={this.hideModal} headerText={`${trainCode}-${trainName}`}>
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th>SL#</th>
+                                    <th>SL#</th> 
                                     <th>Station Name</th>
                                     <th>Departure Time</th>
                                 </tr>
@@ -35,17 +34,15 @@ class RouteListModal extends React.Component {
                             <tbody>
                                 {routes.map((item, index) => (
                                     <tr key={index}>
-                                        <td>{index + 1}</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>{index + 1}</td> 
+                                        <td>{item.stationName}</td>
+                                        <td>{item.departureTime}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </Modal>
-                    <button type="button" className="btn btn-sm btn-primary" onClick={this.showModal}>
-                        open
-                    </button>
+
                 </div>
             </div>
         );
@@ -55,11 +52,9 @@ class RouteListModal extends React.Component {
 RouteListModal.propTypes = {
     isOpen: PropTypes.bool.isRequired,
     routes: PropTypes.array.isRequired,
+    trainName: PropTypes.string.isRequired,
+    trainCode: PropTypes.string.isRequired,
     handleModal: PropTypes.func.isRequired
 };
-
-const container = document.createElement("div");
-document.body.appendChild(container);
-ReactDOM.render(<RouteListModal />, container);
 export default RouteListModal;
 
