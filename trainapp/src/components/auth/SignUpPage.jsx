@@ -1,154 +1,162 @@
 import React from "react";
+import http from 'axios';
 
 class SignUpPage extends React.Component {
   state = {
     name: "",
+    mobileNo:"",
     email: "",
     password: "",
-    repassword: "",
-    address: "",
-    mobileNo: "",
-    securCode: ""
+    passwd: "",
+    isPasswordNotMatch:false
   };
 
-  handleSubmit = event => {
-    event.preventDefault();
-    this.log(this.state);
+  baseUrl = "http://localhost:5000/api";
+
+  handleSubmit = async event => { 
+    event.preventDefault(); 
+    const {name,mobileNo,email,password}  = this.state;
+    const data = {name,mobileNo,email,password};
+    const response = await http.post(`${this.baseUrl}/users/sign-up`,data);
+    if(response.status === 200){
+      this.props.history.push('/login');
+      return;
+    } 
   };
 
   handleChange = event => {
+  
+    
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
-  };
+    console.log(this.state);
+    
+  }; 
 
-  log = obj => {
-    console.log(obj);
-  };
+  handleMatchPassword = event=>{
+    let {password,passwd,isPasswordNotMatch} = this.state; 
+     if(password !== passwd)
+       isPasswordNotMatch = true;
+    else
+     isPasswordNotMatch = false;
+    
+     
+     this.setState({
+       isPasswordNotMatch
+     });
+  }
 
   render() {
-    const {
-      name,
-      email,
-      password,
-      repassword,
-      address,
-      mobileNo,
-      securCode
-    } = this.state;
+
+    const {name,mobileNo,email,password,passwd,isPasswordNotMatch} = this.state;
 
     return (
-      <div className="card ">
-        <div className="card-header">Bangladesh Railway</div>
-        <form onSubmit={this.handleSubmit}>
-          <div className="card-body">
-            <div className="row">
-              <div className="offset-md-1 col-md-5">
-                <div className="card">
-                  <div className="card-header">Personal Information</div>
-                  <div className="card-body">
-                    <label htmlFor="name">
-                      Passenger Name
-                      <span className="req">*</span>
+      <div className="card-body border minHeight">
+        <div className="offset-1 col-sm-10">
+          <div className="card border">
+            <div className="card-header border">User Registration</div>
+            <div className="card-body border">
+              <form  onSubmit={this.handleSubmit}>
+                <div className="offset-1 col-sm-10">
+                  <div className="form-group row">
+                    <label htmlFor="name" className="col-sm-4 col-form-label">
+                      Name
                     </label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="form-control"
-                      name="name"
-                      onChange={this.handleChange}
-                      value={name}
-                    />
-                    <label htmlFor="email">
-                      Email
-                      <span className="req">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      name="email"
-                      id="email"
-                      onChange={this.handleChange}
-                      value={email}
-                    />
-                    <label htmlFor="password">
-                      Password
-                      <span className="req">*</span>
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      name="password"
-                      id="password"
-                      onChange={this.handleChange}
-                      value={password}
-                    />
-                    <label htmlFor="repaswd">
-                      Re-enter Password
-                      <span className="req">*</span>
-                    </label>
-                    <input
-                      type="password"
-                      id="repaswd"
-                      className="form-control"
-                      name="repassword"
-                      onChange={this.handleChange}
-                      value={repassword}
-                    />
+                    <div className="col-sm-8">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="name"
+                        name="name"
+                        value={name}
+                        onChange={this.handleChange}
+                      />
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="col-md-5">
-                <div className="card">
-                  <div className="card-header">Extra Information</div>
-                  <div className="card-body">
-                    <label htmlFor="address">
-                      Address
-                      <span className="req">*</span>
-                    </label>
-                    <textarea
-                      name="address"
-                      id="address"
-                      className="form-control"
-                      onChange={this.handleChange}
-                      value={address}
-                    />
-                    <label htmlFor="mobileNo">
+                  <div className="form-group row">
+                    <label
+                      htmlFor="mobileNo"
+                      className="col-sm-4 col-form-label"
+                    >
                       Mobile No.
-                      <span className="req">*</span>
                     </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="mobileNo"
-                      name="mobileNo"
-                      onChange={this.handleChange}
-                      value={mobileNo}
-                    />
-                    <label htmlFor="securCode">
-                      Security Code
-                      <span className="req">*</span>
+                    <div className="col-sm-8">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="mobileNo"
+                        name="mobileNo"
+                        value={mobileNo}
+                        onChange={this.handleChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group row">
+                    <label htmlFor="email" className="col-sm-4 col-form-label">
+                      Email
                     </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="securCode"
-                      id="securCode"
-                      onChange={this.handleChange}
-                      value={securCode}
-                    />
+                    <div className="col-sm-8">
+                      <input
+                        type="email"
+                        className="form-control"
+                        id="email"
+                        name="email"
+                        value={email}
+                        onChange={this.handleChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group row">
+                    <label
+                      htmlFor="password"
+                      className="col-sm-4 col-form-label"
+                    >
+                      Password
+                    </label>
+                    <div className="col-sm-8">
+                      <input
+                        type="password"
+                        className="form-control"
+                        name="password"
+                        id="password"
+                        value={password}
+                        onChange={this.handleChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-group row">
+                    <label htmlFor="passwd" className="col-sm-4 col-form-label">
+                      Re-enter Password
+                    </label>
+                    <div className="col-sm-8">
+                      <input
+                        type="password"
+                        className="form-control"
+                        name="passwd"
+                        id="passwd"
+                        value={passwd}
+                        onBlur={this.handleMatchPassword}
+                        onChange={this.handleChange}
+                      />
+                      {isPasswordNotMatch && (
+                  <span className="text-danger">Password Doesn't Match!</span>
+                )}
+                    </div>
+                  </div>
+                  <div className="form-group row">
+                    <div className="col-sm-4"> </div>
+                    <div className="col-sm-8">
+                      <button type="submit" className="btn btn-primary">
+                        Submit
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </form>
             </div>
-            <button className="btn btn-primary" type="submit">
-              Submit
-            </button>
           </div>
-        </form>
-        <div className="card-footer text-muted text-center">
-          All rights are reserved by Bangladesh Railway
         </div>
       </div>
     );

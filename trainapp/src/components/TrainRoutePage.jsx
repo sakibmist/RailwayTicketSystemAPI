@@ -37,10 +37,28 @@ class TrainRoutePage extends React.Component {
       [name]: value
     });
   };
+  // change asle nicher dropdown select position e chole asbe
+  handleJourneyDateChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value,
+      stationFormId: "",
+      stationToId: "",
+      classId: ""
+    });
+  };
+
+  handleStationToChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value,
+      classId: ""
+    });
+  };
 
   handleChangeStationFrom = async event => {
     const { value } = event.target;
-    this.setState({ stationFormId: value });
+    this.setState({ stationFormId: value, stationToId: "", classId: "" });
     if (!value) return;
     const response = await http.get(
       `${this.baseUrl}/stations/stations/${value}`
@@ -52,34 +70,41 @@ class TrainRoutePage extends React.Component {
   handleSearchTrainRoute = async event => {
     event.preventDefault();
     const { journeyDate, stationFormId, stationToId, classId } = this.state;
-    const data = {
-      journeyDate,
-      stationFormId,
-      stationToId,
-      classId
-    };
-
-    const response = await http.post(
-      `${this.baseUrl}/stations/search/trains`,
-      data
-    );
-    if (response.status === 200) {
-      const listofTrainsInfo = response.data;
-      console.log(listofTrainsInfo);
-      this.setState({
-        listofTrainsInfo
-      });
+    
+    if (journeyDate === '' || stationFormId === '' || stationToId === '' || classId ===  '') { 
+      alert("Empty Fields Are Required! try again.");
+    } else {
+      const data = {
+        journeyDate,
+        stationFormId,
+        stationToId,
+        classId
+      };
+      console.log(data)
+      const response = await http.post(
+        `${this.baseUrl}/stations/search/trains`,
+        data
+      );
+      if (response.status === 200) {
+        const listofTrainsInfo = response.data;
+        console.log(listofTrainsInfo);
+        this.setState({
+          listofTrainsInfo
+        });
+      }
     }
   };
 
   handleShowHideModal = async (train = null) => {
-    this.setState((prevState) => ({
+    this.setState(prevState => ({
       showRouteModal: !prevState.showRouteModal
     }));
     if (train) {
       console.log(train);
-      const {id, trainName, trainNo} = train;
-      const response = await http.get(`${this.baseUrl}/stations/train-route/${id}`);
+      const { id, trainName, trainNo } = train;
+      const response = await http.get(
+        `${this.baseUrl}/stations/train-route/${id}`
+      );
       if (response.status === 200) {
         const routes = response.data;
         console.log(routes);
@@ -118,7 +143,7 @@ class TrainRoutePage extends React.Component {
                   id="journeyDate"
                   name="journeyDate"
                   value={journeyDate}
-                  onChange={this.handleChange}
+                  onChange={this.handleJourneyDateChange}
                 >
                   <option>select</option>
                   {[...Array(10)].map((item, index) => {
@@ -171,7 +196,7 @@ class TrainRoutePage extends React.Component {
                   name="stationToId"
                   id="stationToId"
                   value={stationToId}
-                  onChange={this.handleChange}
+                  onChange={this.handleStationToChange}
                 >
                   <option>select</option>
                   {stationsToList.map((item, index) => (
@@ -233,11 +258,11 @@ class TrainRoutePage extends React.Component {
                     <td>{train.trainName}</td>
                     <td>{train.departureTime}</td>
                     <td>
-                      <button 
-                        className="btn btn-sm" 
+                      <button
+                        className="btn btn-sm"
                         onClick={() => this.handleShowHideModal(train)}
                       >
-                          View
+                        View
                       </button>
                     </td>
                   </tr>
@@ -246,13 +271,15 @@ class TrainRoutePage extends React.Component {
             </table>
           )}
         </div>
-        {showRouteModal && <RouteListModal
-          trainCode={trainCode}
-          trainName={trainName}
-          routes={routes}
-          isOpen={showRouteModal}
-          handleModal={this.handleShowHideModal}
-        />}
+        {showRouteModal && (
+          <RouteListModal
+            trainCode={trainCode}
+            trainName={trainName}
+            routes={routes}
+            isOpen={showRouteModal}
+            handleModal={this.handleShowHideModal}
+          />
+        )}
       </div>
     );
   }

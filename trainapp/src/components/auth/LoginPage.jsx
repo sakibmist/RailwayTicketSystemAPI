@@ -1,4 +1,5 @@
 import React from "react";
+import {NavLink} from 'react-router-dom';
 
 class LoginPage extends React.Component {
   state = {
@@ -19,56 +20,53 @@ class LoginPage extends React.Component {
   };
 
   render() {
-    const { userName, password } = this.state;
+    
     return (
-      <div className="card">
-        <div className="card-header">Bangladesh Railway</div>
-        <div className="card-body">
-          <div className="row">
-            <div className="offset2 col-md-8">
-              <div className="card">
-                <div className="card-header text-center">Login</div>
-                <div className="card-body">
-                  <div className="offset-1 col-sm-10">
-                    <form onSubmit={this.handleSubmit}>
-
-                      <label htmlFor="userName" className="form-label">
-                        User Name
-                      <span className="req">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        id="userName"
-                        className="form-control"
-                        name="userName"
-                        onChange={this.handleChange}
-                        value={userName}
-                      />
-                      <label htmlFor="password" className="form-label">
-                        password
-                      <span className="req">*</span>
-                      </label>
-                      <input
-                        type="password"
-                        className="form-control"
-                        name="password"
-                        id="password"
-                        onChange={this.handleChange}
-                        value={password}
-                      />
-                      <button className="btn btn-primary" type="submit">
-                        Submit
-                    </button>
-                    </form>
-
-                  </div>
+      <div className="card-body border minHeight">
+        <div className="card offset-1 col-sm-10">
+          <div className="card-header">Bangladesh Railway</div>
+          <div className="card-body">
+            <div className="offset-1 col-sm-10">
+              <div className="form-group row">
+                <label htmlFor="name" className="col-sm-4 col-form-label">
+                  User Name
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="name"
+                    name="name"
+                  />
+                </div>
+              </div>
+              <div className="form-group row">
+                <label htmlFor="password" className="col-sm-4 col-form-label">
+                  Password
+                </label>
+                <div className="col-sm-8">
+                  <input
+                    type="password"
+                    className="form-control"
+                    name="password"
+                    id="password"
+                  />
+                </div>
+              </div>
+              
+              <div className="form-group row">
+                <div className="col-sm-4"> </div>
+                <div className="col-sm-8 d-flex">
+                  <button type="submit" className="btn btn-primary btn-sm">
+                    Login
+                  </button>
+                  <NavLink to="/sign-up" className="btn btn-info btn-sm ml-2">Create New</NavLink> 
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
     );
   }
 }

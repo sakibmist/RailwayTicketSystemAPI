@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using RailwayAPI.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace RailwayAPI
 {
@@ -15,13 +18,18 @@ namespace RailwayAPI
             Configuration = configuration;
         }
 
+        public Startup(IConfiguration configuration)
+        {
+            this.Configuration = configuration;
+
+        }
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-            .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddDbContext<Context>(options => options.UseLazyLoadingProxies().UseSqlServer(Configuration.GetConnectionString("Context")));
             services.AddCors(options =>
             {
@@ -33,6 +41,21 @@ namespace RailwayAPI
                     .AllowCredentials()
                 );
             });
+
+            //for authentication purpose
+            services.Configure<Middleware>(Configuration.GetSection("Middleware"));
+            services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("Middleware:Token").Value)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                    };
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

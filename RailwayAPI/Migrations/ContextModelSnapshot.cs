@@ -166,6 +166,35 @@ namespace RailwayAPI.Migrations
                     b.ToTable("TrainWeekends");
                 });
 
+            modelBuilder.Entity("RailwayAPI.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("MobileNo")
+                        .IsRequired()
+                        .HasMaxLength(15);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("RailwayAPI.Models.Route", b =>
                 {
                     b.HasOne("RailwayAPI.Models.Station", "StationFrom")

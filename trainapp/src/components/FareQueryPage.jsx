@@ -98,7 +98,7 @@ class FareQueryPage extends React.Component {
 
     return (
       <div className="card-body border minHeight d-flex">
-        <div className="col-sm-8 d-column">
+        <div className="col-sm-8">
           <form onSubmit={this.handleSubmit}>
             <div className="form-group row">
               <label htmlFor="journeyDate" className="col-sm-4 col-form-label">
@@ -238,7 +238,7 @@ class FareQueryPage extends React.Component {
             </div>
           </form>
         </div>
-        <div className="col-sm-4 d-column">
+        <div className="col-sm-4">
           <div className="d-flex offset-1 col-sm-10">
             <h3 className="d-column">Total Fare:</h3>
             <p className="d-column ml-2" style={{ fontSize: "25px" }}>

@@ -10,8 +10,8 @@ using RailwayAPI.Models;
 namespace RailwayAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20181210054208_ModifiedTrainNameLength")]
-    partial class ModifiedTrainNameLength
+    [Migration("20181216070737_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -166,6 +166,35 @@ namespace RailwayAPI.Migrations
                     b.HasIndex("TrainId");
 
                     b.ToTable("TrainWeekends");
+                });
+
+            modelBuilder.Entity("RailwayAPI.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.Property<string>("MobileNo")
+                        .IsRequired()
+                        .HasMaxLength(15);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(255);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("RailwayAPI.Models.Route", b =>
