@@ -10,7 +10,7 @@ using RailwayAPI.Models;
 namespace RailwayAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20181216070737_Init")]
+    [Migration("20181217094633_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -188,9 +188,11 @@ namespace RailwayAPI.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(255);
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired();
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

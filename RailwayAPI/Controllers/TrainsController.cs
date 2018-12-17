@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RailwayAPI.Dto;
 using RailwayAPI.Models;
 
 namespace RailwayAPI.Controllers
 {
+    [Authorize]
     [Route("api/trains")]
     [ApiController]
     public class TrainsController : ControllerBase

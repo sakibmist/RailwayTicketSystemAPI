@@ -17,8 +17,9 @@ class SignUpPage extends React.Component {
     event.preventDefault(); 
     const {name,mobileNo,email,password}  = this.state;
     const data = {name,mobileNo,email,password};
-    const response = await http.post(`${this.baseUrl}/users/sign-up`,data);
+    const response = await http.post(`${this.baseUrl}/users/signup`,data);
     if(response.status === 200){
+      console.log(response.data);
       this.props.history.push('/login');
       return;
     } 

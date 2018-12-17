@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RailwayAPI.Dto
 {
-    public class UserDto
+    public class SignUpDto
     {
          [Required] 
         public string Name { get; set; }

@@ -57,7 +57,8 @@ namespace RailwayAPI.Migrations
                     Name = table.Column<string>(maxLength: 50, nullable: false),
                     MobileNo = table.Column<string>(maxLength: 15, nullable: false),
                     Email = table.Column<string>(maxLength: 255, nullable: false),
-                    Password = table.Column<string>(maxLength: 255, nullable: false),
+                    PasswordHash = table.Column<byte[]>(nullable: false),
+                    PasswordSalt = table.Column<byte[]>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>

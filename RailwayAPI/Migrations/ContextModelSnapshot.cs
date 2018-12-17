@@ -186,9 +186,11 @@ namespace RailwayAPI.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(255);
+                    b.Property<byte[]>("PasswordHash")
+                        .IsRequired();
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired();
 
                     b.HasKey("Id");
 

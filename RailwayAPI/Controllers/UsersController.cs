@@ -1,8 +1,13 @@
+using System;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using RailwayAPI.Dto;
+using RailwayAPI.Helpers;
 using RailwayAPI.Models;
+using RailwayAPI.Service;
 
 namespace RailwayAPI.Controllers
 {
@@ -10,43 +15,28 @@ namespace RailwayAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly Context _dataContext;
-        private readonly IOptions<Middleware> _config;
-        public UsersController(Context dataContext, IOptions<Middleware> config) // for authentication purpose
+        // private readonly Context _dataContext;// AuthService e db te kaj kora hoyese tai ekane sudu IAuthService er instance create korlei hobe
+        private readonly IAuthService _authService;
+        public UsersController(IAuthService authService) // for authentication purpose
         {
-            _dataContext = dataContext;
-            _config = config;
+            _authService = authService;
         }
 
-        [HttpGet]
-        public IActionResult GetAllData()
+        [HttpPost("signup")]
+        public async Task<IActionResult> SignUp(SignUpDto signupDto)
         {
             try
             {
-                var items = _dataContext.Users.ToList();
-                return Ok(items); //200
-            }
-            catch (System.Exception)
-            {
-                return BadRequest(); //400
-            }
-        }
-
-        [HttpPost("sign-up")]
-        public IActionResult SighUpData(UserDto user)
-        {
-            try
-            {
-                if (user == null) return NotFound(); //404
-                _dataContext.Users.Add(user);
-                _dataContext.SaveChanges();
-                var token = GetToken(authData.Id, authData.UserName);
-
-                return Ok(new AuthReturnDto
+                if (signupDto == null) return NotFound(); //404
+                var user = new User
                 {
-                    User = authData,
-                        Token = token
-                });
+                    Email = signupDto.Email,
+                    MobileNo = signupDto.MobileNo,
+                    Name = signupDto.Name
+                };
+                var isRegistered = await _authService.Register(user, signupDto.Password);
+                if (isRegistered) return Ok();
+                return BadRequest();
             }
             catch (System.Exception)
             {
@@ -54,18 +44,32 @@ namespace RailwayAPI.Controllers
             }
         }
 
-        [HttpGet("check/{mobileNo}")]
-        public IActionResult CheckIsAccountNoExists(string mobileNo)
+        [HttpPost("signin")]
+        public async Task<IActionResult> Signin(SignInDto data)
         {
             try
             {
-                var isExist = _dataContext.Users.Any(x => x.MobileNo.ToLower() == mobileNo.ToLower());
-                return Ok(new { IsExist = isExist }); //200
-            }
-            catch (System.Exception)
-            {
+                var loginData = await _authService.Login(data.Email, data.Password);
+                if (loginData == null) return Unauthorized();
+                var token = _authService.GetToken(loginData.Id, loginData.Email);
 
-                return BadRequest(); //400
+                var authData = new AuthDto
+                {
+                    Name = loginData.Name,
+                    Email = loginData.Email,
+                    MobileNo = loginData.MobileNo,
+                    CreatedAt = loginData.CreatedAt 
+                };
+
+                return Ok(new AuthReturnDto
+                {
+                    User = authData,
+                        Token = token
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 

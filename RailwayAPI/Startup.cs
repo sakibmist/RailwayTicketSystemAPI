@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using RailwayAPI.Helpers;
 using RailwayAPI.Models;
+using RailwayAPI.Service;
 
 namespace RailwayAPI
 {
@@ -16,13 +18,7 @@ namespace RailwayAPI
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-        }
-
-        public Startup(IConfiguration configuration)
-        {
-            this.Configuration = configuration;
-
-        }
+        } 
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -43,19 +39,21 @@ namespace RailwayAPI
             });
 
             //for authentication purpose
-            services.Configure<Middleware>(Configuration.GetSection("Middleware"));
-            services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.Configure<JwtConfig>(Configuration.GetSection("JwtConfig"));
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("Middleware:Token").Value)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("JwtConfig:PrivateKey").Value)),
                     ValidateIssuer = false,
                     ValidateAudience = false
-                    };
-                });
+                };
+            });
+
+            //instance create korar jonno
+            services.AddScoped<IAuthService,AuthService>();//thread niye kaj kore .
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +64,7 @@ namespace RailwayAPI
                 app.UseDeveloperExceptionPage();
             }
             app.UseCors("CorsPolicy");
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
