@@ -4,54 +4,60 @@ import http from 'axios';
 class SignUpPage extends React.Component {
   state = {
     name: "",
-    mobileNo:"",
+    mobileNo: "",
     email: "",
     password: "",
     passwd: "",
-    isPasswordNotMatch:false
+    isPasswordMatch: true
   };
 
   baseUrl = "http://localhost:5000/api";
 
-  handleSubmit = async event => { 
-    event.preventDefault(); 
-    const {name,mobileNo,email,password}  = this.state;
-    const data = {name,mobileNo,email,password};
-    const response = await http.post(`${this.baseUrl}/users/signup`,data);
-    if(response.status === 200){
-      console.log(response.data);
-      this.props.history.push('/login');
-      return;
-    } 
+  handleSubmit = async event => {
+    event.preventDefault();
+    const { name, mobileNo, email, password, passwd } = this.state;
+    console.log(this.state);
+    if (name === '' || email === '' || password === '' || passwd === '') {
+      alert('Empty Fields are Required!');
+    } else {
+      const data = { name, mobileNo, email, password };
+      const response = await http.post(`${this.baseUrl}/users/signup`, data);
+      if (response.status === 200) {
+        console.log(response.data);
+        this.props.history.push('/login');
+        return;
+      }
+    }
+
   };
 
   handleChange = event => {
-  
-    
+
+
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
     console.log(this.state);
-    
-  }; 
 
-  handleMatchPassword = event=>{
-    let {password,passwd,isPasswordNotMatch} = this.state; 
-     if(password !== passwd)
-       isPasswordNotMatch = true;
-    else
-     isPasswordNotMatch = false;
-    
-     
-     this.setState({
-       isPasswordNotMatch
-     });
+  };
+
+  handleMobileChange = event => {
+    const { value } = event.target;
+    this.setState({ mobileNo: value, password: '', passwd: '', isPasswordMatch: true });
+    console.log(this.state);
   }
+
+  handleMatchPassword = () => {
+    let { password, passwd } = this.state;
+    this.setState({
+      isPasswordMatch: password === passwd
+    });
+  };
 
   render() {
 
-    const {name,mobileNo,email,password,passwd,isPasswordNotMatch} = this.state;
+    const { name, mobileNo, email, password, passwd, isPasswordMatch } = this.state;
 
     return (
       <div className="card-body border minHeight">
@@ -59,7 +65,7 @@ class SignUpPage extends React.Component {
           <div className="card border">
             <div className="card-header border">User Registration</div>
             <div className="card-body border">
-              <form  onSubmit={this.handleSubmit}>
+              <form onSubmit={this.handleSubmit}>
                 <div className="offset-1 col-sm-10">
                   <div className="form-group row">
                     <label htmlFor="name" className="col-sm-4 col-form-label">
@@ -90,7 +96,7 @@ class SignUpPage extends React.Component {
                         id="mobileNo"
                         name="mobileNo"
                         value={mobileNo}
-                        onChange={this.handleChange}
+                        onChange={this.handleMobileChange}
                       />
                     </div>
                   </div>
@@ -141,9 +147,9 @@ class SignUpPage extends React.Component {
                         onBlur={this.handleMatchPassword}
                         onChange={this.handleChange}
                       />
-                      {isPasswordNotMatch && (
-                  <span className="text-danger">Password Doesn't Match!</span>
-                )}
+                      {!isPasswordMatch && (
+                        <span className="text-danger">Password Doesn't Match!</span>
+                      )}
                     </div>
                   </div>
                   <div className="form-group row">

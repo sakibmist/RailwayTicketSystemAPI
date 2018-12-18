@@ -4,7 +4,7 @@ namespace RailwayAPI.Dto
 {
     public class SignUpDto
     {
-         [Required] 
+        [Required] 
         public string Name { get; set; }
 
         [Required] 

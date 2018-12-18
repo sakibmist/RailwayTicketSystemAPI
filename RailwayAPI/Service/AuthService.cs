@@ -69,7 +69,7 @@ namespace RailwayAPI.Service
                     new Claim(ClaimTypes.Name, email)
                 };
 
-                var privateKey = _config.Value.PrivateKey;
+                var privateKey = _config.Value.PrivateKey;//from startup privateKey
                 var key = new SymmetricSecurityKey(
                     Encoding.UTF8.GetBytes(privateKey)
                 );

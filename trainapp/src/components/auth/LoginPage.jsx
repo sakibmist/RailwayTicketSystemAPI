@@ -8,22 +8,32 @@ class LoginPage extends React.Component {
     password: ""
   };
   baseUrl = "http://localhost:5000/api";
+
   handleSubmit = async event => {
     event.preventDefault();
     const { email, password } = this.state;
     const data = { email, password };
-    console.log(data);
-    const response = await http.post(`${this.baseUrl}/users/signin`, data);
-    console.log(response.status);
+    if (email === '' || password === '') {
+      alert('Empty Fields are Required! Try again.')
+    } else {
+      const response = await http.post(`${this.baseUrl}/users/signin`, data);
+      console.log(response.status);
 
-    if (response.status === 200) { 
-      const token =response.data.token;
-      localStorage.setItem("TokenKey",token);
+      if (response.status !== 200) {
+        alert('You are unauthorized! Create your account.');
+        return;
+      }
+      const {token, user} = response.data;
+      localStorage.setItem("TokenKey", token);
+      localStorage.setItem('UserData',jsonData);
+      //const jsonData = JSON.stringify(user); //to set obj in the localstorage
+      //const storageData = localStorage.getItem("UserData");
+      //if(!storageData) return ;
+
+      //const myobj = JSON.parse(storageData);
+
       this.props.history.push('/home');
-      return;
     }
-
-
   };
 
   handleChange = event => {
@@ -34,7 +44,7 @@ class LoginPage extends React.Component {
   };
 
   render() {
-    const { email, password } = this.state; 
+    const { email, password } = this.state;
     return (
       <div className="card-body border minHeight">
         <div className="card offset-1 col-sm-10">

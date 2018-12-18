@@ -53,7 +53,7 @@ namespace RailwayAPI.Controllers
                 if (loginData == null) return Unauthorized();
                 var token = _authService.GetToken(loginData.Id, loginData.Email);
 
-                var authData = new AuthDto
+                var authData = new AuthDto //from user model
                 {
                     Name = loginData.Name,
                     Email = loginData.Email,
